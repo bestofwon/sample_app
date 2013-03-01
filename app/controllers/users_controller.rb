@@ -6,17 +6,24 @@ class UsersController < ApplicationController
   
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
 
   def new
-  		@user = User.new
+    # if signed_in?
+      # flash[:notice] = "Not available page while you are signed_in."
+      # render '/'
+    # else
+  		  @user = User.new
+    # end
+
   end
 
   def create
   		@user = User.new(params[:user])
   		if @user.save
         sign_in @user
-  			 flash[:succes] = "Welcome to the Sample App"
+  			 flash[:success] = "Welcome to the Sample App"
   			 redirect_to @user
   		else
   			 render 'new'
@@ -51,14 +58,14 @@ class UsersController < ApplicationController
 
   private
 
-    def signed_in_user
-      unless signed_in?
-        store_location
-        redirect_to signin_url, notice: "Please sign in." unless signed_in?
-        #flash[:notice] = "~"
-        #redirect_to signin)url과 같음
-      end
-    end
+    # def signed_in_user
+    #   unless signed_in?
+    #     store_location
+    #     redirect_to signin_url, notice: "Please sign in." unless signed_in?
+    #     #flash[:notice] = "~"
+    #     #redirect_to signin)url과 같음
+    #   end
+    # end
     
     def correct_user
       @user = User.find(params[:id])
